@@ -23,3 +23,4 @@ class UserService:
     async def _validate_username(self, username: str) -> None:
         if await self.user_repository.is_username_taken(username):
             raise UsernameAlreadyInUse
+

@@ -12,3 +12,4 @@ class UserRepository:
 
     async def is_username_taken(self, username: str) -> bool:
         return any(u.username == username for u in self.users.values())
+
