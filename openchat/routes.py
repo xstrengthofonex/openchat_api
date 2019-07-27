@@ -17,4 +17,4 @@ class Routes:
 
     async def create(self, app: web.Application):
         app.router.add_get("/status", self.status_api)
-        app.router.add_post("/domain", self.users_api.create_user)
+        app.router.add_post("/users", self.users_api.create_user)
