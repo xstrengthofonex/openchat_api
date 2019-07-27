@@ -3,7 +3,7 @@ from tests.integration.api_test_suite import APITestSuite
 
 class TestITRegistrationAPI(APITestSuite):
     async def test_register_a_new_user(self):
-        response = await self.client.post("/users", json=dict(
+        response = await self.client.post("/domain", json=dict(
             username="Lucy",
             password="alki342d",
             about="About Lucy"))

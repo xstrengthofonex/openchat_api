@@ -6,7 +6,10 @@ from aiohttp.web import Request
 from asynctest import TestCase, Mock
 
 from openchat.apis.users_api import UsersAPI
-from openchat.domain.users import UserService, RegistrationData, User
+from openchat.domain.users.entities import User
+from openchat.domain.users.services import UserService
+from openchat.domain.users.requests import RegistrationData
+from openchat.domain.users.exceptions import UsernameAlreadyInUse
 from tests.unit.infrastructure.builders import UserBuilder
 
 
@@ -15,15 +18,8 @@ class UsersAPIShould(TestCase):
     PASSWORD = "1234567"
     ABOUT = "About Alice"
     USER_ID = str(uuid4())
-    REGISTRATION_DATA = RegistrationData(
-        username=USERNAME,
-        password=PASSWORD,
-        about=ABOUT)
-    USER = UserBuilder(
-        id=USER_ID,
-        username=USERNAME,
-        password=PASSWORD,
-        about=ABOUT).build()
+    REGISTRATION_DATA = RegistrationData(username=USERNAME, password=PASSWORD, about=ABOUT)
+    USER = UserBuilder(id=USER_ID, username=USERNAME, password=PASSWORD, about=ABOUT).build()
 
     def setUp(self) -> None:
         self.user_service = Mock(UserService)
@@ -44,6 +40,15 @@ class UsersAPIShould(TestCase):
         self.assertEqual(201, result.status)
         self.assertEqual("application/json", result.content_type)
         self.assertEqual(self.user_response_containing(self.USER), json.loads(result.text))
+
+    async def test_return_an_error_when_creating_a_user_with_an_existing_name(self):
+        self.user_service.create_user.side_effect = UsernameAlreadyInUse
+
+        result = await self.users_api.create_user(self.request)
+
+        self.user_service.create_user.assert_called_with(self.REGISTRATION_DATA)
+        self.assertEqual(400, result.status)
+        self.assertEqual("Username already in use.", result.text)
 
     @staticmethod
     def registration_request_containing(registration_data: RegistrationData) -> Dict[str, str]:

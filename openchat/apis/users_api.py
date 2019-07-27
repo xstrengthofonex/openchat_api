@@ -2,7 +2,10 @@ from typing import Dict
 
 from aiohttp import web
 
-from openchat.domain.users import UserService, RegistrationData, User
+from openchat.domain.users.entities import User
+from openchat.domain.users.exceptions import UsernameAlreadyInUse
+from openchat.domain.users.services import UserService
+from openchat.domain.users.requests import RegistrationData
 
 
 class UsersAPI:
@@ -11,8 +14,11 @@ class UsersAPI:
 
     async def create_user(self, request: web.Request) -> web.Response:
         registration_data = await self.registration_data_from(request)
-        user = await self.user_service.create_user(registration_data)
-        return web.json_response(self.user_to_registration_response(user), status=201)
+        try:
+            user = await self.user_service.create_user(registration_data)
+            return web.json_response(self.user_to_registration_response(user), status=201)
+        except UsernameAlreadyInUse:
+            return web.HTTPBadRequest(text="Username already in use.")
 
     @staticmethod
     def user_to_registration_response(user: User) -> Dict[str, str]:

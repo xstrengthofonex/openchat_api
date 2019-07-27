@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from uuid import uuid4
 
-from openchat.domain.users import User
+from openchat.domain.users.entities import User
 
 
 @dataclass(frozen=True)
