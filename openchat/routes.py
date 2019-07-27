@@ -1,12 +1,14 @@
 from aiohttp import web
 
 from openchat.apis.users_api import UsersAPI
+from openchat.domain.user_repositories import UserRepository
 from openchat.domain.user_services import UserService
 
 
 class Routes:
     def __init__(self):
-        self.user_service = UserService()
+        self.user_repository = UserRepository()
+        self.user_service = UserService(self.user_repository)
         self.users_api = UsersAPI(self.user_service)
 
     @staticmethod

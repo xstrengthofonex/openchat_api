@@ -11,7 +11,7 @@ class TestITRegistrationAPI(APITestSuite):
         self.assertEqual(201, response.status)
         self.assertEqual(self.JSON, response.content_type)
         body = await response.json()
-        self.assertRegexpMatches(body.get("id"), self.UUID_PATTERN)
+        self.assertRegex(body.get("id"), self.UUID_PATTERN)
         self.assertEqual("Lucy", body.get("username"))
         self.assertEqual("About Lucy", body.get("about"))
 
