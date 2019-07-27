@@ -7,3 +7,4 @@ class User:
     username: str
     password: str
     about: str
+

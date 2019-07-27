@@ -1,7 +1,7 @@
 from aiohttp import web
 
 from openchat.apis.users_api import UsersAPI
-from openchat.domain.users.services import UserService
+from openchat.domain.user_services import UserService
 
 
 class Routes:
