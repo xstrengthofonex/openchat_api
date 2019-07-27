@@ -43,7 +43,7 @@ class UsersAPIShould(TestCase):
         self.user_service.create_user.assert_called_with(self.REGISTRATION_DATA)
         self.assertEqual(201, result.status)
         self.assertEqual("application/json", result.content_type)
-        self.assertEqual(self.registration_response_containing(self.USER), json.loads(result.text))
+        self.assertEqual(self.user_response_containing(self.USER), json.loads(result.text))
 
     @staticmethod
     def registration_request_containing(registration_data: RegistrationData) -> Dict[str, str]:
@@ -53,7 +53,7 @@ class UsersAPIShould(TestCase):
             about=registration_data.about)
 
     @staticmethod
-    def registration_response_containing(user: User) -> Dict[str, str]:
+    def user_response_containing(user: User) -> Dict[str, str]:
         return dict(
             id=user.id,
             username=user.username,
