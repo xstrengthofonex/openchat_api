@@ -7,6 +7,7 @@ from asynctest import TestCase, Mock
 
 from openchat.apis.users_api import UsersAPI
 from openchat.domain.users import UserService, RegistrationData, User
+from tests.unit.infrastructure.builders import UserBuilder
 
 
 class UsersAPIShould(TestCase):
@@ -14,8 +15,15 @@ class UsersAPIShould(TestCase):
     PASSWORD = "1234567"
     ABOUT = "About Alice"
     USER_ID = str(uuid4())
-    REGISTRATION_DATA = RegistrationData(username=USERNAME, password=PASSWORD, about=ABOUT)
-    USER = User(id=USER_ID, username=USERNAME, password=PASSWORD, about=ABOUT)
+    REGISTRATION_DATA = RegistrationData(
+        username=USERNAME,
+        password=PASSWORD,
+        about=ABOUT)
+    USER = UserBuilder(
+        id=USER_ID,
+        username=USERNAME,
+        password=PASSWORD,
+        about=ABOUT).build()
 
     def setUp(self) -> None:
         self.user_service = Mock(UserService)
