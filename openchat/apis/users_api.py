@@ -1,6 +1,8 @@
+from typing import Dict
+
 from aiohttp import web
 
-from openchat.domain.users import UserService, RegistrationData
+from openchat.domain.users import UserService, RegistrationData, User
 
 
 class UsersAPI:
@@ -13,14 +15,14 @@ class UsersAPI:
         return web.json_response(self.user_to_registration_response(user), status=201)
 
     @staticmethod
-    def user_to_registration_response(user):
+    def user_to_registration_response(user: User) -> Dict[str, str]:
         return dict(
             id=user.id,
             username=user.username,
             about=user.about)
 
     @staticmethod
-    async def registration_data_from(request):
+    async def registration_data_from(request: web.Request) -> RegistrationData:
         data = await request.json()
         registration_data = RegistrationData(
             username=data.get("username", ""),

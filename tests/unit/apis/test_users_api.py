@@ -1,4 +1,5 @@
 import json
+from typing import Dict
 from uuid import uuid4
 
 from aiohttp.web import Request
@@ -37,14 +38,14 @@ class UsersAPIShould(TestCase):
         self.assertEqual(self.registration_response_containing(self.USER), json.loads(result.text))
 
     @staticmethod
-    def registration_request_containing(registration_data):
+    def registration_request_containing(registration_data: RegistrationData) -> Dict[str, str]:
         return dict(
             username=registration_data.username,
             password=registration_data.password,
             about=registration_data.about)
 
     @staticmethod
-    def registration_response_containing(user):
+    def registration_response_containing(user: User) -> Dict[str, str]:
         return dict(
             id=user.id,
             username=user.username,
