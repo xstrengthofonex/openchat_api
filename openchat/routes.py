@@ -1,8 +1,8 @@
 from aiohttp import web
 
 from openchat.apis.users_api import UsersAPI
-from openchat.domain.user_repositories import UserRepository
-from openchat.domain.user_services import UserService
+from openchat.domain.users.repositories import UserRepository
+from openchat.domain.users.services import UserService
 
 
 class Routes:

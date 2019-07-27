@@ -1,6 +1,6 @@
 from asynctest import TestCase
 
-from openchat.domain.user_repositories import UserRepository
+from openchat.domain.users.repositories import UserRepository
 from tests.unit.infrastructure.builders import UserBuilder
 
 

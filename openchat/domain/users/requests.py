@@ -6,4 +6,3 @@ class RegistrationData:
     username: str
     password: str
     about: str
-

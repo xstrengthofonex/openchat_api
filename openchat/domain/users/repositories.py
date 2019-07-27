@@ -1,6 +1,6 @@
 from typing import Dict
 
-from openchat.domain.user_entities import User
+from openchat.domain.users.entities import User
 
 
 class UserRepository:

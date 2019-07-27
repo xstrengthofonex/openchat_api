@@ -1,7 +1,7 @@
-from openchat.domain.user_entities import User
-from openchat.domain.user_exceptions import UsernameAlreadyInUse
-from openchat.domain.user_repositories import UserRepository
-from openchat.domain.user_requests import RegistrationData
+from openchat.domain.users.entities import User
+from openchat.domain.users.exceptions import UsernameAlreadyInUse
+from openchat.domain.users.repositories import UserRepository
+from openchat.domain.users.requests import RegistrationData
 from openchat.infrastructure.generators import IdGenerator
 
 
