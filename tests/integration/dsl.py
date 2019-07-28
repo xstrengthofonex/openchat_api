@@ -98,7 +98,8 @@ class OpenChatTestDSL(APITestSuite):
         self.assertEqual(201, response.status)
         self.logger.info("Following created")
 
-    def assert_timeline_matches_post(self, result: dict, post: ITPost) -> None:
+    def assert_result_matches_post(self, result: dict, post: ITPost) -> None:
+        self.assertIsNotNone(result)
         self.assertRegex(result.get("postId"), self.UUID_PATTERN)
         self.assertRegex(result.get("userId"), self.UUID_PATTERN)
         self.assertEqual(post.text, result.get("text"))

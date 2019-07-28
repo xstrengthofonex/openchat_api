@@ -1,3 +1,4 @@
+from itertools import zip_longest
 from typing import List
 
 from tests.integration.dsl import (
@@ -35,5 +36,5 @@ class TestITTimelineAPI(OpenChatTestDSL):
         self.timeline.extend(await response.json())
 
     async def then_he_should_see(self, posts: List[ITPost]):
-        for (i, post) in enumerate(posts):
-            self.assert_timeline_matches_post(self.timeline[i], post)
+        for (result, expected) in zip_longest(self.timeline, posts):
+            self.assert_result_matches_post(result, expected)
