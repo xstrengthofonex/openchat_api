@@ -23,18 +23,18 @@ class LoginAPIShould(TestCase):
 
     async def test_returns_a_valid_user(self):
         self.user_repository.user_for.return_value = self.USER
-        self.request.json.return_value = self.login_request_containing(self.USER_CREDENTIALS)
+        self.request.json.return_value = self.login_data_from(self.USER_CREDENTIALS)
 
         result = await self.login_api.login(self.request)
 
         self.user_repository.user_for.assert_called_with(self.USER_CREDENTIALS)
         self.assertEqual(200, result.status)
         self.assertEqual("application/json", result.content_type)
-        self.assertEqual(self.login_response_containing(self.USER), json.loads(result.text))
+        self.assertEqual(self.login_response_from(self.USER), json.loads(result.text))
 
     async def test_return_an_error_when_credentials_are_invalid(self):
         self.user_repository.user_for.return_value = None
-        self.request.json.return_value = self.login_request_containing(self.USER_CREDENTIALS)
+        self.request.json.return_value = self.login_data_from(self.USER_CREDENTIALS)
 
         result = await self.login_api.login(self.request)
 
@@ -43,13 +43,13 @@ class LoginAPIShould(TestCase):
         self.assertEqual("Invalid credentials.", result.text)
 
     @staticmethod
-    def login_request_containing(user_credentials: UserCredentials) -> dict:
+    def login_data_from(user_credentials: UserCredentials) -> dict:
         return dict(
             username=user_credentials.username,
             password=user_credentials.password)
 
     @staticmethod
-    def login_response_containing(user: User) -> dict:
+    def login_response_from(user: User) -> dict:
         return dict(
             id=user.id,
             username=user.username,

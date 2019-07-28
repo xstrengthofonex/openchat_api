@@ -17,3 +17,9 @@ class UserCredentials:
 
     def matches(self, user: User) -> bool:
         return user.username == self.username and user.password == self.password
+
+
+@dataclass(frozen=True)
+class Following:
+    follower_id: str
+    followee_id: str

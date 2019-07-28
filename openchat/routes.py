@@ -1,5 +1,6 @@
 from aiohttp import web
 
+from openchat.apis.following_api import FollowingAPI
 from openchat.apis.login_api import LoginAPI
 from openchat.apis.posts_api import PostsAPI
 from openchat.apis.users_api import UsersAPI
@@ -26,6 +27,7 @@ class Routes:
         self.users_api = UsersAPI(self.user_service)
         self.login_api = LoginAPI(self.user_repository)
         self.posts_api = PostsAPI(self.post_service)
+        self.following_api = FollowingAPI(self.user_service)
 
     @staticmethod
     async def status_api(request: web.Request) -> web.Response:
@@ -38,3 +40,4 @@ class Routes:
         app.router.add_post("/login", self.login_api.login)
         app.router.add_post("/users/{user_id}/timeline", self.posts_api.create_post)
         app.router.add_get("/users/{user_id}/timeline", self.posts_api.posts_by_user)
+        app.router.add_post("/following", self.following_api.create_following)
