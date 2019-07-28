@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Callable
 
 from aiohttp import web
@@ -9,6 +10,9 @@ from openchat.routes import Routes
 
 
 class OpenChat:
+    ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+    SWAGGER_FILEPATH = os.path.join(os.path.dirname(ROOT_PATH), "APIs.yaml")
+
     API_NOT_IMPLEMENTED = "API Not Implemented"
     INTERNAL_SERVER_ERROR = "Internal Server Error"
 
@@ -43,7 +47,7 @@ class OpenChat:
         app = web.Application(middlewares=[
             self.enable_cors,
             self.configure_errors])
-        setup_swagger(app, swagger_from_file="../APIs.yaml")
+        setup_swagger(app, swagger_from_file=self.SWAGGER_FILEPATH)
         await self.routes.create(app)
         return app
 
