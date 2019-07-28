@@ -48,3 +48,21 @@ class PostServiceShould(TestCase):
             await self.post_service.create_post(self.USER_ID, self.INAPPROPRIATE_TEXT)
         self.language_service.is_inappropriate.assert_called_with(self.INAPPROPRIATE_TEXT)
 
+
+class LanguageServiceShould(TestCase):
+    INAPPROPRIATE_TEXTS = [
+        "Elephant", "elephant", "eLePhant", "big ELEphant",
+        "Orange", "orange", "ORANGE", "small orange",
+        "Ice cream", "ice cream", "cold ice cream"]
+    APPROPRIATE_TEXT = "Ok Text"
+
+    async def setUp(self) -> None:
+        self.language_service = LanguageService()
+
+    async def test_determines_when_text_has_inappropriate_language(self):
+        for text in self.INAPPROPRIATE_TEXTS:
+            self.assertTrue(await self.language_service.is_inappropriate(text))
+
+    async def test_determines_when_text_is_appropriate_language(self):
+        self.assertFalse(await self.language_service.is_inappropriate(self.APPROPRIATE_TEXT))
+

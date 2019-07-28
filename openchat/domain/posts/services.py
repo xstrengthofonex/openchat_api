@@ -6,8 +6,10 @@ from openchat.infrastructure.generators import IdGenerator
 
 
 class LanguageService:
+    inappropriate_words = ["ELEPHANT", "ORANGE", "ICE CREAM"]
+
     async def is_inappropriate(self, text: str) -> bool:
-        raise NotImplementedError
+        return any(w in text.upper() for w in self.inappropriate_words)
 
 
 class PostService:
@@ -20,8 +22,7 @@ class PostService:
         self.clock = clock
 
     async def create_post(self, user_id: str, text: str) -> Post:
-        if await self.language_service.is_inappropriate(text):
-            raise InappropriateLanguage
+        await self.validate(text)
         post = Post(
             post_id=self.id_generator.next_id(),
             user_id=user_id,
@@ -29,3 +30,8 @@ class PostService:
             date_time=self.clock.now())
         await self.post_repository.add(post)
         return post
+
+    async def validate(self, text):
+        if await self.language_service.is_inappropriate(text):
+            raise InappropriateLanguage
+
