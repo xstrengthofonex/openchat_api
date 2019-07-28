@@ -3,8 +3,7 @@ from typing import Dict, List
 from aiohttp import web
 
 from openchat.domain.users.entities import User
-from openchat.domain.users.exceptions import UsernameAlreadyInUse
-from openchat.domain.users.services import UserService
+from openchat.domain.users.services import UserService, UsernameAlreadyInUse
 from openchat.domain.users.requests import RegistrationData
 
 

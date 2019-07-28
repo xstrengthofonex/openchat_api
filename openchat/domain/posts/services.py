@@ -1,10 +1,13 @@
 from typing import List
 
 from openchat.domain.posts.entities import Post
-from openchat.domain.posts.exceptions import InappropriateLanguage
 from openchat.domain.posts.repositories import PostRepository
 from openchat.infrastructure.clock import Clock
 from openchat.infrastructure.generators import IdGenerator
+
+
+class InappropriateLanguage(RuntimeError):
+    pass
 
 
 class LanguageService:

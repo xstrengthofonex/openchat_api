@@ -7,8 +7,7 @@ from datetime import datetime
 
 from openchat.apis.posts_api import PostsAPI
 from openchat.domain.posts.entities import Post
-from openchat.domain.posts.exceptions import InappropriateLanguage
-from openchat.domain.posts.services import PostService
+from openchat.domain.posts.services import PostService, InappropriateLanguage
 
 
 class PostsAPIShould(TestCase):

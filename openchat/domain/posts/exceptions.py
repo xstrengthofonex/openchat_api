@@ -1,5 +1,0 @@
-
-
-class InappropriateLanguage(RuntimeError):
-    pass
-

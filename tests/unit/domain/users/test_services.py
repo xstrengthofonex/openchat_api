@@ -1,9 +1,10 @@
+from uuid import uuid4
+
 from asynctest import TestCase, Mock
 
-from openchat.domain.users.exceptions import UsernameAlreadyInUse
 from openchat.domain.users.repositories import UserRepository
-from openchat.domain.users.requests import RegistrationData
-from openchat.domain.users.services import UserService
+from openchat.domain.users.requests import RegistrationData, Following
+from openchat.domain.users.services import UserService, UsernameAlreadyInUse, FollowingAlreadyExists
 from openchat.infrastructure.generators import IdGenerator
 from tests.unit.infrastructure.builders import UserBuilder
 
@@ -15,6 +16,9 @@ class UserServiceShould(TestCase):
         password=USER.password,
         about=USER.about)
     USERS = [USER]
+    FOLLOWEE_ID = str(uuid4())
+    FOLLOWER_ID = str(uuid4())
+    FOLLOWING = Following(follower_id=FOLLOWER_ID, followee_id=FOLLOWEE_ID)
 
     async def setUp(self) -> None:
         self.user_repository = Mock(UserRepository)
@@ -43,3 +47,14 @@ class UserServiceShould(TestCase):
         result = await self.user_service.all_users()
 
         self.assertEqual(self.USERS, result)
+
+    async def test_register_a_following(self):
+        await self.user_service.add_following(self.FOLLOWING)
+
+        self.user_repository.add_following.assert_called_with(self.FOLLOWING)
+
+    async def test_raises_error_when_creating_existing_following(self):
+        with self.assertRaises(FollowingAlreadyExists):
+            self.user_repository.has_following.return_value = True
+            await self.user_service.add_following(self.FOLLOWING)
+        self.user_repository.has_following.assert_called_with(self.FOLLOWING)

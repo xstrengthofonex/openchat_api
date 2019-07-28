@@ -4,9 +4,8 @@ from asynctest import TestCase, Mock
 from datetime import datetime
 
 from openchat.domain.posts.entities import Post
-from openchat.domain.posts.exceptions import InappropriateLanguage
 from openchat.domain.posts.repositories import PostRepository
-from openchat.domain.posts.services import PostService, LanguageService
+from openchat.domain.posts.services import PostService, LanguageService, InappropriateLanguage
 from openchat.infrastructure.clock import Clock
 from openchat.infrastructure.generators import IdGenerator
 

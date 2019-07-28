@@ -1,10 +1,17 @@
 from typing import List
 
 from openchat.domain.users.entities import User
-from openchat.domain.users.exceptions import UsernameAlreadyInUse
 from openchat.domain.users.repositories import UserRepository
 from openchat.domain.users.requests import RegistrationData, Following
 from openchat.infrastructure.generators import IdGenerator
+
+
+class UsernameAlreadyInUse(RuntimeError):
+    pass
+
+
+class FollowingAlreadyExists(RuntimeError):
+    pass
 
 
 class UserService:
@@ -30,4 +37,6 @@ class UserService:
         return await self.user_repository.all()
 
     async def add_following(self, following: Following) -> None:
-        raise NotImplementedError
+        if await self.user_repository.has_following(following):
+            raise FollowingAlreadyExists
+        await self.user_repository.add_following(following)

@@ -1,5 +1,0 @@
-
-
-class UsernameAlreadyInUse(RuntimeError):
-    pass
-

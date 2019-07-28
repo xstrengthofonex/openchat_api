@@ -7,9 +7,8 @@ from asynctest import TestCase, Mock
 
 from openchat.apis.users_api import UsersAPI
 from openchat.domain.users.entities import User
-from openchat.domain.users.services import UserService
+from openchat.domain.users.services import UserService, UsernameAlreadyInUse
 from openchat.domain.users.requests import RegistrationData
-from openchat.domain.users.exceptions import UsernameAlreadyInUse
 from tests.unit.infrastructure.builders import UserBuilder
 
 

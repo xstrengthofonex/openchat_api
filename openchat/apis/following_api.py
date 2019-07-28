@@ -1,7 +1,7 @@
 from aiohttp import web
 
 from openchat.domain.users.requests import Following
-from openchat.domain.users.services import UserService
+from openchat.domain.users.services import UserService, FollowingAlreadyExists
 
 
 class FollowingAPI:
@@ -10,7 +10,10 @@ class FollowingAPI:
 
     async def create_following(self, request: web.Request) -> web.Response:
         following = await self.following_from(request)
-        await self.user_service.add_following(following)
+        try:
+            await self.user_service.add_following(following)
+        except FollowingAlreadyExists:
+            return web.HTTPBadRequest(text="Following already exists.")
         return web.json_response(status=201)
 
     @staticmethod

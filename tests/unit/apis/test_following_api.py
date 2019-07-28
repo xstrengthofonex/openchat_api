@@ -5,7 +5,7 @@ from asynctest import TestCase, Mock
 
 from openchat.apis.following_api import FollowingAPI
 from openchat.domain.users.requests import Following
-from openchat.domain.users.services import UserService
+from openchat.domain.users.services import UserService, FollowingAlreadyExists
 
 
 class FollowingAPIShould(TestCase):
@@ -25,6 +25,14 @@ class FollowingAPIShould(TestCase):
 
         self.user_service.add_following.assert_called_with(self.FOLLOWING)
         self.assertEqual(201, result.status)
+
+    async def test_returns_error_if_following_already_exists(self):
+        self.user_service.add_following.side_effect = FollowingAlreadyExists
+
+        result = await self.following_api.create_following(self.request)
+
+        self.assertEqual(400, result.status)
+        self.assertEqual("Following already exists.", result.text)
 
     @staticmethod
     def following_data_from(following):

@@ -1,8 +1,7 @@
 from aiohttp import web
 
 from openchat.domain.posts.entities import Post
-from openchat.domain.posts.exceptions import InappropriateLanguage
-from openchat.domain.posts.services import PostService
+from openchat.domain.posts.services import PostService, InappropriateLanguage
 
 
 class PostsAPI:
