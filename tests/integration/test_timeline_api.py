@@ -9,8 +9,8 @@ class TestITTimelineAPI(OpenChatTestDSL):
 
     async def setUp(self) -> None:
         await super().setUp()
-        self.user = await self.register(self.DAVID)
-        self.posts = await self.create_posts_for(self.user, 2)
+        self.DAVID = await self.register(self.DAVID)
+        self.posts = await self.create_posts_for(self.DAVID, 2)
         self.timeline = []
 
     async def test_retrieve_a_timeline_with_all_posts_from_user_in_chronological_order(self):
@@ -29,7 +29,7 @@ class TestITTimelineAPI(OpenChatTestDSL):
             await self.create(post)
 
     async def when_he_checks_his_timeline(self) -> None:
-        response = await self.client.get(f"/users/{self.user.id}/timeline")
+        response = await self.client.get(f"/users/{self.DAVID.id}/timeline")
         self.assertEqual(200, response.status)
         self.assertEqual("application/json", response.content_type)
         self.timeline.extend(await response.json())

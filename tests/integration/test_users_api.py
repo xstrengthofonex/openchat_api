@@ -8,11 +8,12 @@ class TestITUsersAPI(OpenChatTestDSL):
     PEDRO = ITUserBuilder(username="Pedro").build()
 
     async def test_returns_all_users(self):
-        sandro = await self.register(self.SANDRO)
-        mash = await self.register(self.MASH)
-        steve = await self.register(self.STEVE)
-        pedro = await self.register(self.PEDRO)
+        self.SANDRO = await self.register(self.SANDRO)
+        self.MASH = await self.register(self.MASH)
+        self.STEVE = await self.register(self.STEVE)
+        self.PEDRO = await self.register(self.PEDRO)
 
         response = await self.client.get("/users")
 
-        await self.assert_all_users_are_returned(response, [sandro, mash, steve, pedro])
+        await self.assert_all_users_are_returned(response, [
+            self.SANDRO, self.MASH, self.STEVE, self.PEDRO])

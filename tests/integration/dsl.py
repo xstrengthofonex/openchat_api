@@ -22,9 +22,9 @@ class ITUser:
 @dataclass(frozen=True)
 class ITUserBuilder:
     id: str = None
-    username: str = "Alice"
+    username: str = "User"
     password: str = "12345678"
-    about: str = "About Alice"
+    about: str = "About User"
 
     def build(self) -> ITUser:
         return ITUser(
@@ -90,6 +90,13 @@ class OpenChatTestDSL(APITestSuite):
         self.assertEqual(post.text, body.get("text"))
         self.assertIsNotNone(body.get("dateTime"))
         self.logger.info("Post created.")
+
+    async def create_following(self, follower: ITUser, followee: ITUser) -> None:
+        self.logger.info(f"Create following - follower [{follower}], followee [{followee}]")
+        response = await self.client.post("/followings", json=dict(
+            followerId=follower.id, followeeId=followee.id))
+        self.assertEqual(201, response.status)
+        self.logger.info("Following created")
 
     def assert_timeline_matches_post(self, result: dict, post: ITPost) -> None:
         self.assertRegex(result.get("postId"), self.UUID_PATTERN)
