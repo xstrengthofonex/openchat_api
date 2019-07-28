@@ -4,12 +4,14 @@ from openchat.apis.login_api import LoginAPI
 from openchat.apis.users_api import UsersAPI
 from openchat.domain.users.repositories import UserRepository
 from openchat.domain.users.services import UserService
+from openchat.infrastructure.generators import IdGenerator
 
 
 class Routes:
     def __init__(self):
+        self.id_generator = IdGenerator()
         self.user_repository = UserRepository()
-        self.user_service = UserService(self.user_repository)
+        self.user_service = UserService(self.user_repository, self.id_generator)
         self.users_api = UsersAPI(self.user_service)
         self.login_api = LoginAPI(self.user_repository)
 

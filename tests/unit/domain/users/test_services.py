@@ -18,8 +18,7 @@ class UserServiceShould(TestCase):
     async def setUp(self) -> None:
         self.user_repository = Mock(UserRepository)
         self.id_generator = Mock(IdGenerator)
-        self.user_service = UserService(self.user_repository)
-        self.user_service.id_generator = self.id_generator
+        self.user_service = UserService(self.user_repository, self.id_generator)
         self.id_generator.next_id.return_value = self.USER.id
         self.user_repository.is_username_taken.return_value = False
 

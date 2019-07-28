@@ -6,8 +6,8 @@ from openchat.infrastructure.generators import IdGenerator
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository):
-        self.id_generator = IdGenerator()
+    def __init__(self, user_repository: UserRepository, id_generator: IdGenerator) -> None:
+        self.id_generator = id_generator
         self.user_repository = user_repository
 
     async def create_user(self, registration_data: RegistrationData) -> User:

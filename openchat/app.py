@@ -4,7 +4,6 @@ from typing import Callable
 
 from aiohttp import web
 from aiohttp.web_middlewares import middleware
-from aiohttp_swagger import setup_swagger
 
 from openchat.routes import Routes
 
@@ -47,7 +46,7 @@ class OpenChat:
         app = web.Application(middlewares=[
             self.enable_cors,
             self.configure_errors])
-        setup_swagger(app, swagger_from_file=self.SWAGGER_FILEPATH)
+        # setup_swagger(app, swagger_from_file=self.SWAGGER_FILEPATH)
         await self.routes.create(app)
         return app
 
