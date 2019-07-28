@@ -3,18 +3,25 @@ from aiohttp import web
 from openchat.apis.login_api import LoginAPI
 from openchat.apis.posts_api import PostsAPI
 from openchat.apis.users_api import UsersAPI
-from openchat.domain.posts.services import PostService
+from openchat.domain.posts.repositories import PostRepository
+from openchat.domain.posts.services import PostService, LanguageService
 from openchat.domain.users.repositories import UserRepository
 from openchat.domain.users.services import UserService
+from openchat.infrastructure.clock import Clock
 from openchat.infrastructure.generators import IdGenerator
 
 
 class Routes:
     def __init__(self):
         self.id_generator = IdGenerator()
+        self.clock = Clock()
         self.user_repository = UserRepository()
+        self.post_repository = PostRepository()
+        self.language_service = LanguageService()
         self.user_service = UserService(self.user_repository, self.id_generator)
-        self.post_service = PostService()
+        self.post_service = PostService(
+            self.post_repository, self.language_service,
+            self.id_generator, self.clock)
 
         self.users_api = UsersAPI(self.user_service)
         self.login_api = LoginAPI(self.user_repository)
