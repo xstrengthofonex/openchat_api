@@ -1,7 +1,9 @@
 from aiohttp import web
 
 from openchat.apis.login_api import LoginAPI
+from openchat.apis.posts_api import PostsAPI
 from openchat.apis.users_api import UsersAPI
+from openchat.domain.posts.services import PostService
 from openchat.domain.users.repositories import UserRepository
 from openchat.domain.users.services import UserService
 from openchat.infrastructure.generators import IdGenerator
@@ -12,8 +14,11 @@ class Routes:
         self.id_generator = IdGenerator()
         self.user_repository = UserRepository()
         self.user_service = UserService(self.user_repository, self.id_generator)
+        self.post_service = PostService()
+
         self.users_api = UsersAPI(self.user_service)
         self.login_api = LoginAPI(self.user_repository)
+        self.posts_api = PostsAPI(self.post_service)
 
     @staticmethod
     async def status_api(request: web.Request) -> web.Response:
@@ -23,4 +28,4 @@ class Routes:
         app.router.add_get("/status", self.status_api)
         app.router.add_post("/users", self.users_api.create_user)
         app.router.add_post("/login", self.login_api.login)
-
+        app.router.add_post("/users/{user_id}/timeline", self.posts_api.create_post)

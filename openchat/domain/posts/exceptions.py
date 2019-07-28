@@ -1,0 +1,5 @@
+
+
+class InappropriateLanguage(RuntimeError):
+    pass
+

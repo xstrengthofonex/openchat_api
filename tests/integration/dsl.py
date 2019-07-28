@@ -7,7 +7,7 @@ from datetime import datetime
 from tests.integration.api_test_suite import APITestSuite
 
 
-DATE_FORMAT = "%Y-%m-%d'T'%H:%M:%S'Z'"
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
 
 
 @dataclass(frozen=True)
@@ -95,4 +95,3 @@ class OpenChatTestDSL(APITestSuite):
         self.assertRegex(result.get("userId"), self.UUID_PATTERN)
         self.assertEqual(post.text, result.get("text"))
         self.assertRegex(result.get("dateTime"), self.DATETIME_PATTERN)
-
