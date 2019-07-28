@@ -94,4 +94,4 @@ class OpenChatTestDSL(APITestSuite):
         self.assertRegex(result.get("postId"), self.UUID_PATTERN)
         self.assertRegex(result.get("userId"), self.UUID_PATTERN)
         self.assertEqual(post.text, result.get("text"))
-        self.assertRegex(result.get("dateTime"), self.DATETIME_PATTERN)
+        self.assertIsNotNone(result.get("dateTime"))
