@@ -16,18 +16,26 @@ class PostsAPI:
         text = await self.post_text_from(request)
         try:
             post = await self.post_service.create_post(user_id, text)
-            return web.json_response(self.create_post_response_from(post), status=201)
+            return web.json_response(self.post_response_from(post), status=201)
         except InappropriateLanguage:
             return web.HTTPBadRequest(text="Post contains inappropriate language.")
+
+    async def posts_by_user(self, request: web.Request) -> web.Response:
+        user_id = request.match_info.get("user_id")
+        posts = await self.post_service.posts_by(user_id)
+        return web.json_response(self.posts_response_from(posts))
 
     @staticmethod
     async def post_text_from(request: web.Request) -> str:
         data = await request.json()
         return data.get("text", "")
 
-    def create_post_response_from(self, post: Post) -> dict:
+    def post_response_from(self, post: Post) -> dict:
         return dict(
             postId=post.post_id,
             userId=post.user_id,
             text=post.text,
             dateTime=post.date_time.strftime(self.DATE_FORMAT))
+
+    def posts_response_from(self, posts):
+        return [self.post_response_from(p) for p in posts]

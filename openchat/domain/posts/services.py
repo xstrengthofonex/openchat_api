@@ -1,3 +1,5 @@
+from typing import List
+
 from openchat.domain.posts.entities import Post
 from openchat.domain.posts.exceptions import InappropriateLanguage
 from openchat.domain.posts.repositories import PostRepository
@@ -30,6 +32,9 @@ class PostService:
             date_time=self.clock.now())
         await self.post_repository.add(post)
         return post
+
+    async def posts_by(self, user_id: str) -> List[Post]:
+        raise NotImplementedError
 
     async def validate(self, text):
         if await self.language_service.is_inappropriate(text):

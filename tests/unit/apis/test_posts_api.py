@@ -18,10 +18,8 @@ class PostsAPIShould(TestCase):
     INAPPROPRIATE_TEXT = "Inappropriate Text"
     TODAY = datetime.now()
     POST_ID = str(uuid4())
-    POST = Post(post_id=POST_ID,
-                user_id=USER_ID,
-                text=POST_TEXT,
-                date_time=TODAY)
+    POST = Post(post_id=POST_ID, user_id=USER_ID, text=POST_TEXT, date_time=TODAY)
+    POSTS = [POST]
 
     async def setUp(self) -> None:
         self.request = Mock(web.Request)
@@ -47,7 +45,7 @@ class PostsAPIShould(TestCase):
         self.post_service.create_post.assert_called_with(self.USER_ID, self.POST_TEXT)
         self.assertEqual(201, result.status)
         self.assertEqual("application/json", result.content_type)
-        self.assertEqual(self.create_post_response_from(self.POST), json.loads(result.text))
+        self.assertEqual(self.post_response_from(self.POST), json.loads(result.text))
 
     async def test_returns_error_when_creating_post_with_inappropriate_language(self):
         self.request.match_info.get.return_value = self.USER_ID
@@ -60,10 +58,23 @@ class PostsAPIShould(TestCase):
         self.assertEqual(400, result.status)
         self.assertEqual("Post contains inappropriate language.", result.text)
 
-    def create_post_response_from(self, post: Post) -> dict:
+    async def test_returns_list_of_posts_for_given_user(self):
+        self.request.match_info.get.return_value = self.USER_ID
+        self.post_service.posts_by.return_value = self.POSTS
+
+        result = await self.posts_api.posts_by_user(self.request)
+
+        self.post_service.posts_by.assert_called_with(self.USER_ID)
+        self.assertEqual(200, result.status)
+        self.assertEqual("application/json", result.content_type)
+        self.assertEqual(self.posts_response_from(self.POSTS), json.loads(result.text))
+
+    def post_response_from(self, post: Post) -> dict:
         return dict(
             postId=post.post_id,
             userId=post.user_id,
             text=post.text,
             dateTime=post.date_time.strftime(self.DATE_FORMAT))
 
+    def posts_response_from(self, posts):
+        return [self.post_response_from(p) for p in posts]
