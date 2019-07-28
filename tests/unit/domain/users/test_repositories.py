@@ -31,3 +31,11 @@ class UserRepositoryShould(TestCase):
         self.assertEqual(await self.user_repository.user_for(self.ALICE_CREDENTIALS), self.ALICE)
         self.assertEqual(await self.user_repository.user_for(self.CHARLIE_CREDENTIALS), self.CHARLIE)
         self.assertIsNone(await self.user_repository.user_for(self.UNKNOWN_CREDENTIALS))
+
+    async def test_returns_all_users(self):
+        await self.user_repository.add(self.ALICE)
+        await self.user_repository.add(self.CHARLIE)
+
+        result = await self.user_repository.all()
+
+        self.assertEqual(result, [self.ALICE, self.CHARLIE])

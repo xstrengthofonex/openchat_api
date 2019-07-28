@@ -27,4 +27,4 @@ class UserService:
             raise UsernameAlreadyInUse
 
     async def all_users(self) -> List[User]:
-        raise NotImplementedError
+        return await self.user_repository.all()

@@ -1,4 +1,4 @@
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from openchat.domain.users.entities import User
 from openchat.domain.users.requests import UserCredentials
@@ -10,6 +10,9 @@ class UserRepository:
 
     async def add(self, user: User) -> None:
         self.users[user.id] = user
+
+    async def all(self) -> List[User]:
+        return list(self.users.values())
 
     async def is_username_taken(self, username: str) -> bool:
         return any(u.username == username for u in self.users.values())

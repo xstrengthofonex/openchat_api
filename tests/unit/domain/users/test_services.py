@@ -14,6 +14,7 @@ class UserServiceShould(TestCase):
         username=USER.username,
         password=USER.password,
         about=USER.about)
+    USERS = [USER]
 
     async def setUp(self) -> None:
         self.user_repository = Mock(UserRepository)
@@ -35,3 +36,10 @@ class UserServiceShould(TestCase):
             await self.user_service.create_user(self.REGISTRATION_DATA)
 
             self.user_repository.is_username_taken.assert_called_with(self.USER.username)
+
+    async def test_get_all_users(self):
+        self.user_repository.all.return_value = self.USERS
+
+        result = await self.user_service.all_users()
+
+        self.assertEqual(self.USERS, result)
