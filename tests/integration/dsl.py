@@ -1,5 +1,6 @@
 import logging
 from dataclasses import dataclass
+from typing import List
 from uuid import uuid4
 
 from datetime import datetime
@@ -95,3 +96,16 @@ class OpenChatTestDSL(APITestSuite):
         self.assertRegex(result.get("userId"), self.UUID_PATTERN)
         self.assertEqual(post.text, result.get("text"))
         self.assertIsNotNone(result.get("dateTime"))
+
+    async def assert_all_users_are_returned(self, response, users: List[ITUser]) -> None:
+        self.assertEqual(200, response.status)
+        self.assertEqual("application/json", response.content_type)
+        body = await response.json()
+        assert all(self.user_response_from(u) in body for u in users)
+
+    @staticmethod
+    def user_response_from(user: ITUser) -> dict:
+        return dict(
+            id=user.id,
+            username=user.username,
+            about=user.about)

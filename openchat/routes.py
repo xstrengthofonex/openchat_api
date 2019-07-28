@@ -34,6 +34,7 @@ class Routes:
     async def create(self, app: web.Application):
         app.router.add_get("/status", self.status_api)
         app.router.add_post("/users", self.users_api.create_user)
+        app.router.add_get("/users", self.users_api.all_users)
         app.router.add_post("/login", self.login_api.login)
         app.router.add_post("/users/{user_id}/timeline", self.posts_api.create_post)
         app.router.add_get("/users/{user_id}/timeline", self.posts_api.posts_by_user)

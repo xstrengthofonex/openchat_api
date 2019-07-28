@@ -20,6 +20,9 @@ class UsersAPI:
         except UsernameAlreadyInUse:
             return web.HTTPBadRequest(text="Username already in use.")
 
+    async def all_users(self, request: web.Request) -> web.Response:
+        raise NotImplementedError
+
     @staticmethod
     def user_to_registration_response(user: User) -> Dict[str, str]:
         return dict(
