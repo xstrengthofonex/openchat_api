@@ -17,11 +17,12 @@ class PostServiceShould(TestCase):
     TEXT = "Post Text"
     INAPPROPRIATE_TEXT = "Inappropriate language"
     TODAY = datetime.now()
-    NEW_POST = Post(
+    POST = Post(
         post_id=POST_ID,
         user_id=USER_ID,
         text=TEXT,
         date_time=TODAY)
+    POSTS = [POST]
 
     async def setUp(self) -> None:
         self.post_repository = Mock(PostRepository)
@@ -39,14 +40,22 @@ class PostServiceShould(TestCase):
 
         result = await self.post_service.create_post(self.USER_ID, self.TEXT)
 
-        self.post_repository.add.assert_called_with(self.NEW_POST)
-        self.assertEqual(self.NEW_POST, result)
+        self.post_repository.add.assert_called_with(self.POST)
+        self.assertEqual(self.POST, result)
 
     async def test_raises_error_when_creating_post_with_inappropriate_language(self):
         self.language_service.is_inappropriate.return_value = True
         with self.assertRaises(InappropriateLanguage):
             await self.post_service.create_post(self.USER_ID, self.INAPPROPRIATE_TEXT)
         self.language_service.is_inappropriate.assert_called_with(self.INAPPROPRIATE_TEXT)
+
+    async def test_returns_posts_for_given_user(self):
+        self.post_repository.posts_by.return_value = self.POSTS
+
+        result = await self.post_service.posts_by(self.USER_ID)
+
+        self.post_repository.posts_by.assert_called_with(self.USER_ID)
+        self.assertEqual(self.POSTS, result)
 
 
 class LanguageServiceShould(TestCase):

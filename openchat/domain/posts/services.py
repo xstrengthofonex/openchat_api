@@ -34,7 +34,7 @@ class PostService:
         return post
 
     async def posts_by(self, user_id: str) -> List[Post]:
-        raise NotImplementedError
+        return await self.post_repository.posts_by(user_id)
 
     async def validate(self, text):
         if await self.language_service.is_inappropriate(text):
