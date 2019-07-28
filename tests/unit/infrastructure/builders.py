@@ -7,14 +7,14 @@ from openchat.domain.users.entities import User
 
 @dataclass(frozen=True)
 class UserBuilder:
-    id: str = str(uuid4())
+    id: str = None
     username: str = "Username"
     password: str = "password"
     about: str = "About"
 
     def build(self) -> User:
         return User(
-            id=self.id,
+            id=self.id or str(uuid4()),
             username=self.username,
             password=self.password,
             about=self.about)

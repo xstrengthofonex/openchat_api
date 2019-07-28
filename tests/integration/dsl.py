@@ -15,14 +15,14 @@ class ITUser:
 
 @dataclass(frozen=True)
 class ITUserBuilder:
-    id: str = str(uuid4())
+    id: str = None
     username: str = "Alice"
     password: str = "12345678"
     about: str = "About Alice"
 
     def build(self) -> ITUser:
         return ITUser(
-            id=self.id,
+            id=self.id or str(uuid4()),
             username=self.username,
             password=self.password,
             about=self.about)

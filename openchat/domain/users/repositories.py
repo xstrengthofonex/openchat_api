@@ -15,5 +15,5 @@ class UserRepository:
         return any(u.username == username for u in self.users.values())
 
     async def user_for(self, credentials: UserCredentials) -> Optional[User]:
-        raise NotImplementedError
+        return next((u for u in self.users.values() if credentials.matches(u)), None)
 
