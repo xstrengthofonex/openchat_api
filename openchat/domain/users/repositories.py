@@ -7,6 +7,7 @@ from openchat.domain.users.requests import UserCredentials, Following
 class UserRepository:
     def __init__(self):
         self.users: Dict[str, User] = dict()
+        self.followings: List[Following] = list()
 
     async def add(self, user: User) -> None:
         self.users[user.id] = user
@@ -21,7 +22,7 @@ class UserRepository:
         return next((u for u in self.users.values() if credentials.matches(u)), None)
 
     async def add_following(self, following: Following) -> None:
-        raise NotImplementedError
+        self.followings.append(following)
 
     async def has_following(self, following: Following) -> bool:
-        raise NotImplementedError
+        return following in self.followings

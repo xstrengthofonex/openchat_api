@@ -1,19 +1,18 @@
 from asynctest import TestCase
 
 from openchat.domain.users.repositories import UserRepository
-from openchat.domain.users.requests import UserCredentials
+from openchat.domain.users.requests import UserCredentials, Following
 from tests.unit.infrastructure.builders import UserBuilder
 
 
 class UserRepositoryShould(TestCase):
     ALICE = UserBuilder(username="Alice").build()
     CHARLIE = UserBuilder(username="Charlie").build()
-    ALICE_CREDENTIALS = UserCredentials(
-        username=ALICE.username, password=ALICE.password)
-    CHARLIE_CREDENTIALS = UserCredentials(
-        username=CHARLIE.username, password=CHARLIE.password)
-    UNKNOWN_CREDENTIALS = UserCredentials(
-        username="unknown", password="unknown")
+    ALICE_CREDENTIALS = UserCredentials(username=ALICE.username, password=ALICE.password)
+    CHARLIE_CREDENTIALS = UserCredentials(username=CHARLIE.username, password=CHARLIE.password)
+    UNKNOWN_CREDENTIALS = UserCredentials(username="unknown", password="unknown")
+    ALICE_FOLLOWS_CHARLIE = Following(follower_id=ALICE.id, followee_id=CHARLIE.id)
+    CHARLIE_FOLLOWS_ALICE = Following(follower_id=CHARLIE.id, followee_id=ALICE.id)
 
     async def setUp(self):
         self.user_repository = UserRepository()
@@ -39,3 +38,9 @@ class UserRepositoryShould(TestCase):
         result = await self.user_repository.all()
 
         self.assertEqual(result, [self.ALICE, self.CHARLIE])
+
+    async def test_detects_a_following_already_exists(self):
+        await self.user_repository.add_following(self.ALICE_FOLLOWS_CHARLIE)
+
+        self.assertTrue(await self.user_repository.has_following(self.ALICE_FOLLOWS_CHARLIE))
+        self.assertFalse(await self.user_repository.has_following(self.CHARLIE_FOLLOWS_ALICE))
