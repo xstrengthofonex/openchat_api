@@ -39,7 +39,7 @@ class UsersAPIShould(TestCase):
         self.user_service.create_user.assert_called_with(self.REGISTRATION_DATA)
         self.assertEqual(201, result.status)
         self.assertEqual("application/json", result.content_type)
-        self.assertEqual(self.user_response_containing(self.USER), json.loads(result.text))
+        self.assertEqual(self.registration_response_containing(self.USER), json.loads(result.text))
 
     async def test_return_an_error_when_creating_a_user_with_an_existing_name(self):
         self.user_service.create_user.side_effect = UsernameAlreadyInUse
@@ -58,7 +58,7 @@ class UsersAPIShould(TestCase):
             about=registration_data.about)
 
     @staticmethod
-    def user_response_containing(user: User) -> Dict[str, str]:
+    def registration_response_containing(user: User) -> Dict[str, str]:
         return dict(
             id=user.id,
             username=user.username,
