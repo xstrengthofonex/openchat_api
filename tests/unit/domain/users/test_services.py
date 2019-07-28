@@ -19,6 +19,8 @@ class UserServiceShould(TestCase):
     FOLLOWEE_ID = str(uuid4())
     FOLLOWER_ID = str(uuid4())
     FOLLOWING = Following(follower_id=FOLLOWER_ID, followee_id=FOLLOWEE_ID)
+    FOLLOWEE = UserBuilder(id=FOLLOWEE_ID).build()
+    FOLLOWEES = [FOLLOWEE]
 
     async def setUp(self) -> None:
         self.user_repository = Mock(UserRepository)
@@ -60,3 +62,11 @@ class UserServiceShould(TestCase):
             self.user_repository.has_following.return_value = True
             await self.user_service.add_following(self.FOLLOWING)
         self.user_repository.has_following.assert_called_with(self.FOLLOWING)
+
+    async def test_returns_users_followed_by_given_user(self):
+        self.user_repository.followees_by.return_value = self.FOLLOWEES
+
+        result = await self.user_service.followees_for(self.FOLLOWER_ID)
+
+        self.user_repository.followees_by.assert_called_with(self.FOLLOWER_ID)
+        self.assertEqual(self.FOLLOWEES, result)

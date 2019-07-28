@@ -41,3 +41,4 @@ class Routes:
         app.router.add_post("/users/{user_id}/timeline", self.posts_api.create_post)
         app.router.add_get("/users/{user_id}/timeline", self.posts_api.posts_by_user)
         app.router.add_post("/followings", self.following_api.create_following)
+        app.router.add_get("/followings/{follower_id}/followees", self.following_api.get_followees)

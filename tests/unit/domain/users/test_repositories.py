@@ -8,11 +8,18 @@ from tests.unit.infrastructure.builders import UserBuilder
 class UserRepositoryShould(TestCase):
     ALICE = UserBuilder(username="Alice").build()
     CHARLIE = UserBuilder(username="Charlie").build()
+    BOB = UserBuilder(username="Bob").build()
+    LUCY = UserBuilder(username="Lucy").build()
+
     ALICE_CREDENTIALS = UserCredentials(username=ALICE.username, password=ALICE.password)
     CHARLIE_CREDENTIALS = UserCredentials(username=CHARLIE.username, password=CHARLIE.password)
     UNKNOWN_CREDENTIALS = UserCredentials(username="unknown", password="unknown")
+
     ALICE_FOLLOWS_CHARLIE = Following(follower_id=ALICE.id, followee_id=CHARLIE.id)
     CHARLIE_FOLLOWS_ALICE = Following(follower_id=CHARLIE.id, followee_id=ALICE.id)
+    ALICE_FOLLOWS_LUCY = Following(follower_id=ALICE.id, followee_id=LUCY.id)
+    BOB_FOLLOWS_CHARLIE = Following(follower_id=BOB.id, followee_id=CHARLIE.id)
+    LUCY_FOLLOWS_BOB = Following(follower_id=LUCY.id, followee_id=BOB.id)
 
     async def setUp(self):
         self.user_repository = UserRepository()
@@ -44,3 +51,18 @@ class UserRepositoryShould(TestCase):
 
         self.assertTrue(await self.user_repository.has_following(self.ALICE_FOLLOWS_CHARLIE))
         self.assertFalse(await self.user_repository.has_following(self.CHARLIE_FOLLOWS_ALICE))
+
+    async def test_returns_followees_for_a_given_follower(self):
+        await self.user_repository.add(self.ALICE)
+        await self.user_repository.add(self.CHARLIE)
+        await self.user_repository.add(self.BOB)
+        await self.user_repository.add(self.LUCY)
+
+        await self.user_repository.add_following(self.ALICE_FOLLOWS_CHARLIE)
+        await self.user_repository.add_following(self.ALICE_FOLLOWS_LUCY)
+        await self.user_repository.add_following(self.BOB_FOLLOWS_CHARLIE)
+        await self.user_repository.add_following(self.LUCY_FOLLOWS_BOB)
+
+        result = await self.user_repository.followees_by(self.ALICE.id)
+
+        self.assertEqual([self.CHARLIE, self.LUCY], result)

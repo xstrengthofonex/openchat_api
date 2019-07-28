@@ -26,3 +26,8 @@ class UserRepository:
 
     async def has_following(self, following: Following) -> bool:
         return following in self.followings
+
+    async def followees_by(self, follower_id: str) -> List[User]:
+        return [self.users.get(f.followee_id)
+                for f in self.followings
+                if f.follower_id == follower_id]

@@ -40,3 +40,6 @@ class UserService:
         if await self.user_repository.has_following(following):
             raise FollowingAlreadyExists
         await self.user_repository.add_following(following)
+
+    async def followees_for(self, follower_id: str) -> List[User]:
+        return await self.user_repository.followees_by(follower_id)
