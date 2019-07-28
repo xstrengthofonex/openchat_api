@@ -1,3 +1,5 @@
+from typing import List
+
 from openchat.domain.users.entities import User
 from openchat.domain.users.exceptions import UsernameAlreadyInUse
 from openchat.domain.users.repositories import UserRepository
@@ -24,3 +26,5 @@ class UserService:
         if await self.user_repository.is_username_taken(username):
             raise UsernameAlreadyInUse
 
+    async def all_users(self) -> List[User]:
+        raise NotImplementedError

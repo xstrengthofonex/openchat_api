@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from aiohttp import web
 
@@ -16,19 +16,23 @@ class UsersAPI:
         registration_data = await self.registration_data_from(request)
         try:
             user = await self.user_service.create_user(registration_data)
-            return web.json_response(self.user_to_registration_response(user), status=201)
+            return web.json_response(self.user_response_from(user), status=201)
         except UsernameAlreadyInUse:
             return web.HTTPBadRequest(text="Username already in use.")
 
     async def all_users(self, request: web.Request) -> web.Response:
-        raise NotImplementedError
+        users = await self.user_service.all_users()
+        return web.json_response(self.users_response_from(users))
 
     @staticmethod
-    def user_to_registration_response(user: User) -> Dict[str, str]:
+    def user_response_from(user: User) -> Dict[str, str]:
         return dict(
             id=user.id,
             username=user.username,
             about=user.about)
+
+    def users_response_from(self, users: List[User]) -> List[dict]:
+        return [self.user_response_from(u) for u in users]
 
     @staticmethod
     async def registration_data_from(request: web.Request) -> RegistrationData:
