@@ -49,6 +49,8 @@ class UserServiceShould(TestCase):
         self.assertEqual(self.USERS, result)
 
     async def test_register_a_following(self):
+        self.user_repository.has_following.return_value = False
+
         await self.user_service.add_following(self.FOLLOWING)
 
         self.user_repository.add_following.assert_called_with(self.FOLLOWING)
