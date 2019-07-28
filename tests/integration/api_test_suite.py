@@ -9,6 +9,7 @@ from openchat.app import OpenChat
 class APITestSuite(TestCase):
     JSON = "application/json"
     UUID_PATTERN = re.compile(r'^[\da-f]{8}-([\da-f]{4}-){3}[\da-f]{12}$', re.IGNORECASE)
+    DATETIME_PATTERN = re.compile(r"^\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d([+-][0-2]\\d:[0-5]\\d|Z)$")
 
     async def setUp(self):
         self.openchat = OpenChat()
