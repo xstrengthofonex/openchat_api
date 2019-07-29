@@ -2,11 +2,13 @@ from uuid import uuid4
 
 from asynctest import TestCase, Mock
 
+from openchat.domain.posts.repositories import PostRepository
+from openchat.domain.posts.services import WallService
 from openchat.domain.users.repositories import UserRepository
 from openchat.domain.users.requests import RegistrationData, Following
 from openchat.domain.users.services import UserService, UsernameAlreadyInUse, FollowingAlreadyExists
 from openchat.infrastructure.generators import IdGenerator
-from tests.unit.infrastructure.builders import UserBuilder
+from tests.unit.infrastructure.builders import UserBuilder, PostBuilder
 
 
 class UserServiceShould(TestCase):
@@ -70,3 +72,28 @@ class UserServiceShould(TestCase):
 
         self.user_repository.followees_by.assert_called_with(self.FOLLOWER_ID)
         self.assertEqual(self.FOLLOWEES, result)
+
+
+class WallServiceShould(TestCase):
+    CHARLIE = UserBuilder(username="Charlie").build()
+    ALICE = UserBuilder(username="Alice").build()
+    LUCY = UserBuilder(username="Lucy").build()
+    WALL_POSTS = [
+        PostBuilder(user_id=CHARLIE.id).build(),
+        PostBuilder(user_id=LUCY.id).build(),
+        PostBuilder(user_id=ALICE.id).build()]
+
+    async def setUp(self) -> None:
+        self.user_service = Mock(UserService)
+        self.post_repository = Mock(PostRepository)
+        self.wall_service = WallService(self.user_service, self.post_repository)
+
+    async def test_return_wall_for_user_and_followees(self):
+        self.user_service.followees_for.return_value = [self.CHARLIE, self.LUCY]
+        self.post_repository.posts_for.return_value = self.WALL_POSTS
+
+        result = await self.wall_service.wall_for(self.ALICE.id)
+
+        self.user_service.followees_for.assert_called_with(self.ALICE.id)
+        self.post_repository.posts_for.assert_called_with([self.CHARLIE.id, self.LUCY.id, self.ALICE.id])
+        self.assertEqual(self.WALL_POSTS, result)

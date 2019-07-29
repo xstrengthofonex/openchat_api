@@ -2,6 +2,7 @@ from typing import List
 
 from openchat.domain.posts.entities import Post
 from openchat.domain.posts.repositories import PostRepository
+from openchat.domain.users.services import UserService
 from openchat.infrastructure.clock import Clock
 from openchat.infrastructure.generators import IdGenerator
 
@@ -43,3 +44,15 @@ class PostService:
         if await self.language_service.is_inappropriate(text):
             raise InappropriateLanguage
 
+
+class WallService:
+    def __init__(self, user_service: UserService, post_repository: PostRepository):
+        self.user_service = user_service
+        self.post_repository = post_repository
+
+    async def wall_for(self, user_id) -> List[Post]:
+        follows = await self.user_service.followees_for(user_id)
+        user_ids = [f.id for f in follows]
+        user_ids.append(user_id)
+        wall_posts = await self.post_repository.posts_for(user_ids)
+        return wall_posts

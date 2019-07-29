@@ -4,8 +4,9 @@ from openchat.apis.following_api import FollowingAPI
 from openchat.apis.login_api import LoginAPI
 from openchat.apis.posts_api import PostsAPI
 from openchat.apis.users_api import UsersAPI
+from openchat.apis.wall_api import WallAPI
 from openchat.domain.posts.repositories import PostRepository
-from openchat.domain.posts.services import PostService, LanguageService
+from openchat.domain.posts.services import PostService, LanguageService, WallService
 from openchat.domain.users.repositories import UserRepository
 from openchat.domain.users.services import UserService
 from openchat.infrastructure.clock import Clock
@@ -23,11 +24,13 @@ class Routes:
         self.post_service = PostService(
             self.post_repository, self.language_service,
             self.id_generator, self.clock)
+        self.wall_service = WallService(self.user_service, self.post_repository)
 
         self.users_api = UsersAPI(self.user_service)
         self.login_api = LoginAPI(self.user_repository)
         self.posts_api = PostsAPI(self.post_service)
         self.following_api = FollowingAPI(self.user_service)
+        self.wall_api = WallAPI(self.wall_service)
 
     @staticmethod
     async def status_api(request: web.Request) -> web.Response:
@@ -42,3 +45,4 @@ class Routes:
         app.router.add_get("/users/{user_id}/timeline", self.posts_api.posts_by_user)
         app.router.add_post("/followings", self.following_api.create_following)
         app.router.add_get("/followings/{follower_id}/followees", self.following_api.get_followees)
+        app.router.add_get("/users/{user_id}/wall", self.wall_api.wall_by_user)

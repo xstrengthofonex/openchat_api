@@ -35,6 +35,8 @@ class TestWallAPI(OpenChatTestDSL):
             self.POST_6_BOB)
         await self.and_alice_follows(self.BOB, self.CHARLIE)
 
+        await self.when_alice_checks_her_wall()
+
         await self.then_she_sees_the_posts(
             self.POST_6_BOB,
             self.POST_5_ALICE,
@@ -54,7 +56,8 @@ class TestWallAPI(OpenChatTestDSL):
         response = await self.client.get(f"/users/{self.ALICE.id}/wall")
         self.assertEqual(200, response.status)
         self.assertEqual("application/json", response.content_type)
-        self.wall.extend(await response.json())
+        wall = await response.json()
+        self.wall.extend(wall)
 
     async def then_she_sees_the_posts(self, *posts):
         for (result, expected) in zip_longest(self.wall, posts):

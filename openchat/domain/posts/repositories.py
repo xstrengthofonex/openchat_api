@@ -13,3 +13,10 @@ class PostRepository:
 
     async def posts_by(self, user_id: str) -> List[Post]:
         return list(sorted(self.posts.get(user_id, []), key=lambda p: p.date_time, reverse=True))
+
+    async def posts_for(self, user_ids: List[str]) -> List[Post]:
+        result = []
+        for user_id in user_ids:
+            result.extend(self.posts.get(user_id, []))
+        return list(sorted(result, key=lambda p: p.date_time, reverse=True))
+
