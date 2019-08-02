@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Tuple
 
 from openchat.entities.users import User
 from openchat.usecases.repositories import Repository
@@ -14,4 +14,5 @@ class InMemoryRepository(Repository):
     async def get_user(self, username: str) -> User:
         return self._users.get(username)
 
-
+    async def get_all_users(self) -> Tuple[User]:
+        return tuple(self._users.values())

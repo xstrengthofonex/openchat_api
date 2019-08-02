@@ -1,8 +1,11 @@
+from typing import List
+
 from aiohttp import web
 
 from openchat.apis.context import api_context
 from openchat.entities.users import User
 from openchat.usecases.create_user import CreateUser, CreateUserRequest
+from openchat.usecases.get_users import GetUsers
 from openchat.usecases.repositories import DuplicateUser
 
 
@@ -16,6 +19,11 @@ class UsersAPI:
             return self.make_created_user_response(user)
         except DuplicateUser:
             raise self.make_duplicate_user_response()
+
+    async def get_users(self, request: web.Request) -> web.Response:
+        get_users = GetUsers()
+        users = await get_users.get()
+        return web.json_response(self.present_all_users(users))
 
     @staticmethod
     def make_create_user_request(data: dict) -> CreateUserRequest:
@@ -31,6 +39,14 @@ class UsersAPI:
     def make_duplicate_user_response() -> web.Response:
         return web.HTTPBadRequest(
             text="Username already in use.")
+
+    @staticmethod
+    def present_all_users(users: List[User]):
+        return [dict(
+            id=api_context.get_uuid_for_user(u.username),
+            username=u.username,
+            about=u.about
+        ) for u in users]
 
     @staticmethod
     def present_created_user(user: User):

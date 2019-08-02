@@ -1,8 +1,13 @@
+from typing import Optional
+
+from openchat.entities.users import User
 from openchat.usecases.context import usecase_context
 
 
 class Login:
     @staticmethod
-    async def validate_credentials(username: str, password: str) -> bool:
+    async def validate_credentials(username: str, password: str) -> Optional[User]:
         user = await usecase_context.repository.get_user(username)
-        return user and user.password == password
+        if user and user.password == password:
+            return user
+        return None

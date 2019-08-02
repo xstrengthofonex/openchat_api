@@ -22,3 +22,4 @@ class Routes:
         app.router.add_get("/status", self.status_api)
         app.router.add_post("/users", self.users_api.register_user)
         app.router.add_post("/login", self.login_api.login)
+        app.router.add_get("/users", self.users_api.get_users)

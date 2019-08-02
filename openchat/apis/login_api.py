@@ -12,9 +12,9 @@ class LoginAPI:
         data = await request.json()
         username = data.get("username", "")
         password = data.get("password", "")
-        if not await usecase.validate_credentials(username, password):
+        user = await usecase.validate_credentials(username, password)
+        if not user:
             raise web.HTTPNotFound(text="Invalid credentials.")
-        user = await usecase_context.repository.get_user(username)
         return web.json_response(self.present_user(user), status=200)
 
     @staticmethod
