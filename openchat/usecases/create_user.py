@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from openchat.entities.users import User
-from openchat.usecases.context import context
+from openchat.usecases.context import usecase_context
 from openchat.usecases.repositories import DuplicateUser
 
 
@@ -14,10 +14,10 @@ class CreateUserRequest:
 
 class CreateUser:
     async def create_user(self, request: CreateUserRequest) -> User:
-        if await context.repository.get_user(request.username):
+        if await usecase_context.repository.get_user(request.username):
             raise DuplicateUser
         user = self.make_user(request)
-        await context.repository.add_user(user)
+        await usecase_context.repository.add_user(user)
         return user
 
     @staticmethod

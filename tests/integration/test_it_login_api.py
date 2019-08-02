@@ -18,3 +18,17 @@ class TestITLoginAPI(OpenChatTestDSL):
         self.assertEqual(self.user.id, body.get("id"))
         self.assertEqual(self.user.username, body.get("username"))
         self.assertEqual(self.user.about, body.get("about"))
+
+    async def test_attempt_with_unregistered_user(self):
+        response = await self.client.post("/login", json=dict(
+            username="unknownUsername", password="unknownPassword"))
+
+        self.assertEqual(404, response.status)
+        self.assertEqual("Invalid credentials.", await response.text())
+
+    async def test_attempt_with_invalid_password(self):
+        response = await self.client.post("/login", json=dict(
+            username=self.ANTONY.username, password="InvalidPassword"))
+
+        self.assertEqual(404, response.status)
+        self.assertEqual("Invalid credentials.", await response.text())

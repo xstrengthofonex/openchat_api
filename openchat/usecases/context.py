@@ -12,5 +12,5 @@ class Context:
         self.repository = InMemoryRepository()
 
 
-context = Context()
-context.initialize()
+usecase_context = Context()
+usecase_context.initialize()

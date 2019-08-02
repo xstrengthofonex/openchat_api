@@ -15,7 +15,7 @@ class UsersAPI:
             user = await create_user.create_user(create_user_request)
             return self.make_created_user_response(user)
         except DuplicateUser:
-            return self.make_duplicate_user_response()
+            raise self.make_duplicate_user_response()
 
     @staticmethod
     def make_create_user_request(data: dict) -> CreateUserRequest:
@@ -30,7 +30,7 @@ class UsersAPI:
     @staticmethod
     def make_duplicate_user_response() -> web.Response:
         return web.HTTPBadRequest(
-            text="Username already in user.")
+            text="Username already in use.")
 
     @staticmethod
     def present_created_user(user: User):

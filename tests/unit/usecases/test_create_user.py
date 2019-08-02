@@ -2,12 +2,12 @@ from asynctest import TestCase
 
 from openchat.usecases.create_user import CreateUserRequest, CreateUser
 from openchat.usecases.repositories import DuplicateUser
-from openchat.usecases.context import context
+from openchat.usecases.context import usecase_context
 
 
 class CreateUserTest(TestCase):
     async def setUp(self) -> None:
-        context.initialize()
+        usecase_context.initialize()
         self.usecase = CreateUser()
         self.request = CreateUserRequest(
             username="username",
@@ -21,7 +21,7 @@ class CreateUserTest(TestCase):
         self.assertEqual("about", self.user.about)
 
     async def test_created_user_is_registered(self):
-        result = await context.repository.get_user("username")
+        result = await usecase_context.repository.get_user("username")
         self.assertEqual(self.user, result)
 
     async def test_raises_exception_when_duplicate_user_is_created(self):

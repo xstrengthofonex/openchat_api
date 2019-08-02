@@ -44,8 +44,7 @@ class OpenChat:
 
     async def create_app(self) -> web.Application:
         app = web.Application(middlewares=[
-            self.enable_cors,
-            self.configure_errors])
+            self.enable_cors])
         # setup_swagger(app, swagger_from_file=self.SWAGGER_FILEPATH)
         await self.routes.create(app)
         return app
