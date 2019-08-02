@@ -4,9 +4,13 @@ from openchat.repositories.in_memory_repositories import InMemoryRepository
 from openchat.usecases.repositories import Repository
 
 
-@dataclass(frozen=True)
+@dataclass
 class Context:
-    repository: Repository
+    repository: Repository = None
+
+    def initialize(self):
+        self.repository = InMemoryRepository()
 
 
-context = Context(repository=InMemoryRepository())
+context = Context()
+context.initialize()

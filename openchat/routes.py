@@ -1,13 +1,15 @@
 from aiohttp import web
 
+from openchat.apis.context import api_context
 from openchat.apis.users_api import UsersAPI
-from openchat.repositories.in_memory_repositories import InMemoryRepository
-from openchat.usecases.context import Context
+from openchat.usecases.context import context
 
 
 class Routes:
     def __init__(self):
-        Context.repository = InMemoryRepository()
+        context.initialize()
+        api_context.initialize()
+
         self.users_api = UsersAPI()
 
     @staticmethod

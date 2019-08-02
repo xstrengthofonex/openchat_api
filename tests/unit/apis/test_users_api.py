@@ -9,6 +9,7 @@ from openchat.entities.users import User
 
 class TestUsersAPI(TestCase):
     async def setUp(self) -> None:
+        api_context.initialize()
         self.api = UsersAPI()
         self.user = User(username="Username", password="Password", about="About")
 

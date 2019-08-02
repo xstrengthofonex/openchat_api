@@ -1,16 +1,15 @@
 from asynctest import TestCase
 
-from openchat.repositories.in_memory_repositories import InMemoryRepository
+from openchat.usecases.create_user import CreateUserRequest, CreateUser
 from openchat.usecases.repositories import DuplicateUser
-from openchat.usecases.context import Context
-import openchat.usecases.create_user as uc
+from openchat.usecases.context import context
 
 
 class CreateUserTest(TestCase):
     async def setUp(self) -> None:
-        Context.repository = InMemoryRepository()
-        self.usecase = uc.CreateUser()
-        self.request = uc.CreateUserRequest(
+        context.initialize()
+        self.usecase = CreateUser()
+        self.request = CreateUserRequest(
             username="username",
             password="password",
             about="about")
@@ -22,7 +21,7 @@ class CreateUserTest(TestCase):
         self.assertEqual("about", self.user.about)
 
     async def test_created_user_is_registered(self):
-        result = await Context.repository.get_user("username")
+        result = await context.repository.get_user("username")
         self.assertEqual(self.user, result)
 
     async def test_raises_exception_when_duplicate_user_is_created(self):
