@@ -17,3 +17,8 @@ class TestITUsersAPI(OpenChatTestDSL):
 
         await self.assert_all_users_are_returned(response, [
             self.SANDRO, self.MASH, self.STEVE, self.PEDRO])
+
+    async def test_returns_empty_when_no_users(self):
+        response = await self.client.get("/users")
+
+        await self.assert_all_users_are_returned(response, [])
