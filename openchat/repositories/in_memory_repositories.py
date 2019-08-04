@@ -1,4 +1,4 @@
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, List
 
 from openchat.entities.documents import Document
 from openchat.entities.users import User
@@ -27,3 +27,6 @@ class InMemoryRepository(Repository):
 
     async def get_next_document_id(self) -> int:
         return len(self._documents) + 1
+
+    async def get_documents_for_user(self, username: str) -> Tuple[Document]:
+        return tuple([d for d in self._documents.values() if d.username == username])

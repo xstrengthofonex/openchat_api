@@ -5,5 +5,5 @@ from openchat.usecases.context import usecase_context
 
 
 class GetUsers:
-    async def get(self) -> List[User]:
+    async def execute(self) -> List[User]:
         return await usecase_context.repository.get_all_users()

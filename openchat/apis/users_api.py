@@ -15,14 +15,14 @@ class UsersAPI:
         data = await request.json()
         create_user_request = self.make_create_user_request(data)
         try:
-            user = await create_user.create_user(create_user_request)
+            user = await create_user.execute(create_user_request)
             return self.make_created_user_response(user)
         except DuplicateUser:
             raise self.make_duplicate_user_response()
 
     async def get_users(self, request: web.Request) -> web.Response:
         get_users = GetUsers()
-        users = await get_users.get()
+        users = await get_users.execute()
         return web.json_response(self.present_all_users(users))
 
     @staticmethod

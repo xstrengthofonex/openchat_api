@@ -18,6 +18,9 @@ class APIContext:
         self._document_uuids[document_id] = value
         return value
 
+    def get_uuid_for_document(self, document_id: int) -> str:
+        return self._document_uuids.get(document_id)
+
     def get_uuid_for_user(self, username: str) -> str:
         return self._user_uuids.get(username)
 

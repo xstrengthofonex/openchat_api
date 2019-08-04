@@ -2,7 +2,6 @@ from aiohttp import web
 
 from openchat.apis.context import api_context
 from openchat.entities.users import User
-from openchat.usecases.context import usecase_context
 from openchat.usecases.login import Login
 
 
@@ -12,7 +11,7 @@ class LoginAPI:
         data = await request.json()
         username = data.get("username", "")
         password = data.get("password", "")
-        user = await usecase.validate_credentials(username, password)
+        user = await usecase.execute(username, password)
         if not user:
             raise web.HTTPNotFound(text="Invalid credentials.")
         return web.json_response(self.present_user(user), status=200)

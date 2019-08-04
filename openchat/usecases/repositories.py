@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod, ABCMeta
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List
 
 from openchat.entities.documents import Document
 from openchat.entities.users import User
@@ -32,4 +32,8 @@ class Repository(ABC, metaclass=ABCMeta):
 
     @abstractmethod
     async def get_next_document_id(self) -> int:
+        pass
+
+    @abstractmethod
+    async def get_documents_for_user(self, username: str) -> List[Document]:
         pass

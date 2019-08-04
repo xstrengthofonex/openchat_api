@@ -21,6 +21,13 @@ class TestITTimelineAPI(OpenChatTestDSL):
 
         await self.then_he_should_see(list(reversed(self.posts)))
 
+    async def test_cannot_create_an_inappropriate_post(self):
+        post = ITPostBuilder(user_id=self.DAVID.id, text="Orange").build()
+        response = await self.client.post(f"/users/{post.user_id}/timeline", json=dict(
+            text=post.text))
+        self.assertEqual(400, response.status)
+        self.assertEqual("Post contains inappropriate language.", await response.text())
+
     @staticmethod
     async def create_posts_for(user: ITUser, number: int) -> List[ITPost]:
         return [ITPostBuilder(user_id=user.id, text=f"Post {i+1}").build() for i in range(number)]

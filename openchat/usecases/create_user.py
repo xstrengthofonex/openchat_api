@@ -13,7 +13,7 @@ class CreateUserRequest:
 
 
 class CreateUser:
-    async def create_user(self, request: CreateUserRequest) -> User:
+    async def execute(self, request: CreateUserRequest) -> User:
         if await usecase_context.repository.get_user(request.username):
             raise DuplicateUser
         user = self.make_user(request)

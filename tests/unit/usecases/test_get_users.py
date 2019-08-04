@@ -13,5 +13,5 @@ class GetUsersTest(TestCase):
     async def test_can_get_all_users(self):
         user = UserBuilder(username="Bob").build()
         await usecase_context.repository.add_user(user)
-        users = await self.get_users.get()
+        users = await self.get_users.execute()
         self.assertEqual((user,), users)

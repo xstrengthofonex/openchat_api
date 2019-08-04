@@ -13,7 +13,7 @@ class CreateUserTest(TestCase):
             username="username",
             password="password",
             about="about")
-        self.user = await self.usecase.create_user(self.request)
+        self.user = await self.usecase.execute(self.request)
 
     async def test_user_fields_are_correct(self):
         self.assertEqual("username", self.user.username)
@@ -26,4 +26,4 @@ class CreateUserTest(TestCase):
 
     async def test_raises_exception_when_duplicate_user_is_created(self):
         with self.assertRaises(DuplicateUser):
-            await self.usecase.create_user(self.request)
+            await self.usecase.execute(self.request)

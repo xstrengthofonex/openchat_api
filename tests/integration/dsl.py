@@ -88,8 +88,14 @@ class OpenChatTestDSL(APITestSuite):
         self.assertRegex(body.get("postId"), self.UUID_PATTERN)
         self.assertEqual(post.user_id, body.get("userId"))
         self.assertEqual(post.text, body.get("text"))
-        self.assertIsNotNone(body.get("dateTime"))
+        self.assertCorrectDateTimeFormat(body.get("dateTime"))
         self.logger.info("Post created.")
+
+    def assertCorrectDateTimeFormat(self, date_string):
+        try:
+            datetime.strptime(date_string, DATE_FORMAT)
+        except (ValueError, TypeError):
+            self.fail(f"{date_string} does not match format {DATE_FORMAT}")
 
     async def create_following(self, follower: ITUser, followee: ITUser) -> None:
         self.logger.info(f"Create following - follower [{follower}], followee [{followee}]")

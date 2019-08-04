@@ -13,15 +13,15 @@ class LoginTest(TestCase):
     async def test_login_with_valid_credentials(self):
         user = UserBuilder(username="Username", password="Password").build()
         await usecase_context.repository.add_user(user)
-        result = await self.login.validate_credentials(user.username, user.password)
+        result = await self.login.execute(user.username, user.password)
         self.assertEqual(user, result)
 
     async def test_login_with_invalid_credentials(self):
-        result = await self.login.validate_credentials("InvalidUsername", "InvalidPassword")
+        result = await self.login.execute("InvalidUsername", "InvalidPassword")
         self.assertIsNone(result)
 
     async def test_login_with_invalid_password(self):
         user = UserBuilder(username="Username", password="Password").build()
         await usecase_context.repository.add_user(user)
-        result = await self.login.validate_credentials(user.username, "InvalidPassword")
+        result = await self.login.execute(user.username, "InvalidPassword")
         self.assertIsNone(result)

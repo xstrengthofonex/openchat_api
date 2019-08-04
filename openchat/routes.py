@@ -26,3 +26,4 @@ class Routes:
         app.router.add_post("/login", self.login_api.login)
         app.router.add_get("/users", self.users_api.get_users)
         app.router.add_post("/users/{user_id}/timeline", self.documents_api.post_document)
+        app.router.add_get("/users/{user_id}/timeline", self.documents_api.get_posts_for_user)
