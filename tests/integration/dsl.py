@@ -21,7 +21,7 @@ class ITUser:
 
 @dataclass(frozen=True)
 class ITUserBuilder:
-    id: str = None
+    id: str = ""
     username: str = "User"
     password: str = "12345678"
     about: str = "About User"
@@ -44,8 +44,8 @@ class ITPost:
 
 @dataclass(frozen=True)
 class ITPostBuilder:
-    post_id: str = None
-    user_id: str = None
+    post_id: str = ""
+    user_id: str = ""
     text: str = "Some Text"
     date_time: datetime = None
 

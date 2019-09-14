@@ -12,7 +12,7 @@ class TestITTimelineAPI(OpenChatTestDSL):
         await super().setUp()
         self.DAVID = await self.register(self.DAVID)
         self.posts = await self.create_posts_for(self.DAVID, 2)
-        self.timeline = []
+        self.timeline: List[dict] = []
 
     async def test_retrieve_a_timeline_with_all_posts_from_user_in_chronological_order(self):
         await self.given_david_posts(self.posts)
